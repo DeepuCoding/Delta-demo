@@ -42,20 +42,27 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 //app.use(session({ store: MongoStore.create({ mongoUrl: process.env.MONGO_URI, options...})
 
-const store = MongoStore.create({
-  mongoUrl: dbUrl,
-  crypto: {
-    secret: process.env.SECRET
-  },
-  touchAfter: 24 * 3600,
-});
+// const store = MongoStore.create({
+//   mongoUrl: dbUrl,
+//   crypto: {
+//     secret: process.env.SECRET
+//   },
+//   touchAfter: 24 * 3600,
+// });
 
-store.on("error", () => {
-  console.log("Error", err);
-});
+// store.on("error", () => {
+//   console.log("Error", err);
+// });
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create( {
+      mongoUrl: dbUrl,
+      touchAfter: 24 * 3600 
+   }) }));
 
 const sessionOptn = {
-  store,
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: true,
